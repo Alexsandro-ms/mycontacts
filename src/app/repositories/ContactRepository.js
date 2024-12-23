@@ -18,18 +18,22 @@ let contacts = [
     },
 ];
 class ContactRepository {
-    findAll() {
-        return new Promise((resolve) => resolve(contacts));
+    async findAll() {
+        const rows = await db.query(`SELECT * FROM contacts`);
+        return rows;
     }
-    findById(id) {
-        return new Promise((resolve) =>
-            resolve(contacts.find((contact) => contact.id === id))
-        );
+    async findById(id) {
+        const [row] = await db.query(`SELECT * FROM contacts WHERE id = $1`, [
+            id,
+        ]);
+        return row;
     }
-    findByEmail(email) {
-        return new Promise((resolve) =>
-            resolve(contacts.find((contact) => contact.email === email))
+    async findByEmail(email) {
+        const [row] = await db.query(
+            `SELECT * FROM contacts WHERE email = $1`,
+            [email]
         );
+        return row;
     }
     async create({ name, email, phone, category_id }) {
         const [row] = await db.query(
@@ -38,8 +42,7 @@ class ContactRepository {
             VALUES($1, $2, $3, $4)
             RETURNING *
             `,
-            //Previnindo SQL INJECTION
-            [name, email, phone, category_id]
+            [name, email, phone, category_id] //Previnindo SQL INJECTION
         );
 
         return row;
