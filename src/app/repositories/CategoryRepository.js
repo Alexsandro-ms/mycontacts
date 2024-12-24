@@ -1,7 +1,7 @@
 const db = require("../../database");
 
 class CategoryRepository {
-    async findAll({ orderBy = "ASC" }) {
+    async findAll(orderBy = "ASC") {
         const direction = orderBy.toUpperCase() === "DESC" ? "DESC" : "ASC";
         const rows = await db.query(
             `SELECT * FROM categories ORDER BY name ${direction}`
@@ -48,8 +48,8 @@ class CategoryRepository {
     async update(id, { name }) {
         const [row] = await db.query(
             `
-                UPDATE contacts
-                SET name = $1,
+                UPDATE categories
+                SET name = $1
                 WHERE id = $2
                 RETURNING *
                 `,
