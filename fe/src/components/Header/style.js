@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Image from "next/image";
 
 export const Container = styled.header`
     margin-top: 74px;
@@ -8,7 +7,7 @@ export const Container = styled.header`
     flex-direction: column;
 `;
 
-export const ImageHeader = styled(Image)`
+export const ImageHeader = styled.img`
     width: 201px;
     height: 100%;
 `;
