@@ -3,7 +3,7 @@ import { ArrowLeft } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { Container } from "./style";
+import { Container } from "./styles";
 
 export default function PageHeader({ title }) {
     return (
