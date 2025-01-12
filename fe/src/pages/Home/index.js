@@ -7,6 +7,7 @@ import {
     ListContainer,
     InputSearchContainer,
 } from "./styles";
+import { Link } from "react-router-dom";
 
 export default function Home() {
     return (
@@ -16,7 +17,7 @@ export default function Home() {
             </InputSearchContainer>
             <Header>
                 <strong>3 contatos</strong>
-                <a href="/">Novo Contato</a>
+                <Link to="/new">Novo Contato</Link>
             </Header>
             <ListContainer>
                 <header>
@@ -36,9 +37,9 @@ export default function Home() {
                     </div>
 
                     <div className="actions">
-                        <a href="/">
+                        <Link to="/edit/123">
                             <NotePencil size={24} color="#5061fc" />
-                        </a>
+                        </Link>
                         <button type="button">
                             <TrashSimple size={24} color="red" />
                         </button>
