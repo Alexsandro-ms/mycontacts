@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Form, ButtonContainer } from "./styles";
 import FormGroup from "../FormGroup";
+
+import { Form, ButtonContainer } from "./styles";
 import { Input } from "../Input";
 import { Select } from "../Select";
 import { Button } from "../Button";
