@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import isEmailValid from "../../utils/isEmailValid";
+import formatPhone from "../../utils/formatPhone";
 import useErrors from "../../hooks/useErrors";
 
 import FormGroup from "../FormGroup";
@@ -38,9 +39,12 @@ export default function ContactForm({ buttonLabel }) {
         console.log({
             name: isName,
             email: isEmail,
-            phone: isPhone,
+            phone: isPhone.replace(/\D/g, ""),
             category: isCategory,
         });
+    }
+    function handlePhoneChange(e) {
+        setIsPhone(formatPhone(e.target.value));
     }
 
     return (
@@ -64,9 +68,10 @@ export default function ContactForm({ buttonLabel }) {
             </FormGroup>
             <FormGroup>
                 <Input
+                    maxLength="15"
                     placeholder="Telefone"
                     value={isPhone}
-                    onChange={(e) => setIsPhone(e.target.value)}
+                    onChange={handlePhoneChange}
                 />
             </FormGroup>
             <FormGroup>
