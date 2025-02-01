@@ -59,6 +59,7 @@ export default function ContactForm({ buttonLabel }) {
                     placeholder="E-mail"
                     value={isEmail}
                     onChange={handleEmailChange}
+                    type="email"
                 />
             </FormGroup>
             <FormGroup>
