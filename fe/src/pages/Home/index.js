@@ -15,6 +15,7 @@ import {
     InputSearchContainer,
 } from "./styles";
 import delay from "../../utils/delay";
+import ContactsService from "../../services/ContactsService";
 
 export default function Home() {
     const [contacts, setContacts] = useState([]);
@@ -34,12 +35,8 @@ export default function Home() {
         async function loadContacts() {
             try {
                 setIsLoading(true);
-                const response = await fetch(
-                    `http://localhost:3001/contacts?orderBy=${orderBy}`
-                );
-                await delay(500);
-                const json = await response.json();
-                setContacts(json);
+                const contactsList = await ContactsService.listContact(orderBy);
+                setContacts(contactsList);
             } catch (error) {
                 console.log("error", error);
             } finally {
