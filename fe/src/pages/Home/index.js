@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import Loader from "../../components/Loader";
 import {
     ArrowDown,
     ArrowUp,
@@ -12,12 +14,13 @@ import {
     ListHeader,
     InputSearchContainer,
 } from "./styles";
-import { Link } from "react-router-dom";
+import delay from "../../utils/delay";
 
 export default function Home() {
     const [contacts, setContacts] = useState([]);
     const [orderBy, setOrderBy] = useState("asc");
     const [searchTerm, setSearchTerm] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     const filteredContacts = useMemo(
         () =>
@@ -28,13 +31,18 @@ export default function Home() {
     );
 
     useEffect(() => {
+        setIsLoading(true);
         fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
             .then(async (response) => {
+                await delay(500);
                 const json = await response.json();
                 setContacts(json);
             })
             .catch((error) => {
                 console.error("Erro", error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, [orderBy]);
 
@@ -48,6 +56,7 @@ export default function Home() {
 
     return (
         <Container>
+            <Loader isLoading={isLoading} />
             <InputSearchContainer>
                 <input
                     value={searchTerm}
