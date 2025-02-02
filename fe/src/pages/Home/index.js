@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
     ArrowDown,
     ArrowUp,
@@ -17,6 +17,16 @@ import { Link } from "react-router-dom";
 export default function Home() {
     const [contacts, setContacts] = useState([]);
     const [orderBy, setOrderBy] = useState("asc");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredContacts = useMemo(
+        () =>
+            contacts.filter((contact) =>
+                contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+            ),
+        [contacts, searchTerm]
+    );
+
     useEffect(() => {
         fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
             .then(async (response) => {
@@ -32,30 +42,41 @@ export default function Home() {
         setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
     }
 
+    function handleChangeSearchTerm(event) {
+        setSearchTerm(event.target.value);
+    }
+
     return (
         <Container>
             <InputSearchContainer>
-                <input type="text" placeholder="Pesquise pelo nome..." />
+                <input
+                    value={searchTerm}
+                    type="text"
+                    placeholder="Pesquise pelo nome..."
+                    onChange={handleChangeSearchTerm}
+                />
             </InputSearchContainer>
             <Header>
                 <strong>
-                    {contacts.length}
-                    {contacts.length === 1 ? " contato" : " contatos"}
+                    {filteredContacts.length}
+                    {filteredContacts.length === 1 ? " contato" : " contatos"}
                 </strong>
                 <Link to="/new">Novo Contato</Link>
             </Header>
-            <ListHeader>
-                <button type="button" onClick={handleToggleOrderBy}>
-                    <span>Nome</span>
-                    {orderBy === "asc" ? (
-                        <ArrowUp size={16} color="#5061fc" />
-                    ) : (
-                        <ArrowDown size={16} color="#5061fc" />
-                    )}
-                </button>
-            </ListHeader>
+            {filteredContacts.length > 0 && (
+                <ListHeader>
+                    <button type="button" onClick={handleToggleOrderBy}>
+                        <span>Nome</span>
+                        {orderBy === "asc" ? (
+                            <ArrowUp size={16} color="#5061fc" />
+                        ) : (
+                            <ArrowDown size={16} color="#5061fc" />
+                        )}
+                    </button>
+                </ListHeader>
+            )}
 
-            {contacts.map((contact) => (
+            {filteredContacts.map((contact) => (
                 <Card key={contact.id}>
                     <div className="info">
                         <div className="contact-name">
