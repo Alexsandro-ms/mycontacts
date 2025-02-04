@@ -7,7 +7,12 @@ class HttpClient {
     async get(path) {
         const response = await fetch(`${this.baseUrl}${path}`); // chamando a API
         await delay(500);
-        return response.json(); // retornando o JSON da resposta
+
+        if (response.ok) {
+            return response.json(); // retornando o JSON da resposta
+        }
+
+        throw new Error(`${response.status} - ${response.statusText}`); // lançando um erro caso a resposta não seja OK
     }
 }
 
