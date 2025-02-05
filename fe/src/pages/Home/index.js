@@ -14,8 +14,8 @@ import {
     ListHeader,
     InputSearchContainer,
 } from "./styles";
-import delay from "../../utils/delay";
 import ContactsService from "../../services/ContactsService";
+import APIError from "../../Errors/APIError";
 
 export default function Home() {
     const [contacts, setContacts] = useState([]);

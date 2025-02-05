@@ -1,5 +1,4 @@
 import HttpClient from "./utils/HttpClient";
-const url = "http://localhost:3001/contacts";
 
 class ContactsService {
     constructor() {
