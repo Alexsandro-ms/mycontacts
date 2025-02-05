@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import {
@@ -33,7 +33,7 @@ export default function Home() {
         [contacts, searchTerm]
     );
 
-    async function loadContacts() {
+    const loadContacts = useCallback(async () => {
         try {
             setIsLoading(true);
             const contactsList = await ContactsService.listContact(orderBy);
@@ -44,11 +44,11 @@ export default function Home() {
         } finally {
             setIsLoading(false);
         }
-    }
+    }, [orderBy]);
 
     useEffect(() => {
         loadContacts();
-    }, [orderBy]);
+    }, [orderBy, loadContacts]);
 
     function handleToggleOrderBy() {
         setOrderBy((prevState) => (prevState === "asc" ? "desc" : "asc"));
@@ -96,53 +96,46 @@ export default function Home() {
                 </ErrorContainer>
             )}
 
-            {
-                !hasError(
-                    <>
-                        {filteredContacts.length > 0 && (
-                            <ListHeader>
-                                <button
-                                    type="button"
-                                    onClick={handleToggleOrderBy}
-                                >
-                                    <span>Nome</span>
-                                    {orderBy === "asc" ? (
-                                        <ArrowUp size={16} color="#5061fc" />
-                                    ) : (
-                                        <ArrowDown size={16} color="#5061fc" />
+            {!hasError && (
+                <>
+                    {filteredContacts.length > 0 && (
+                        <ListHeader>
+                            <button type="button" onClick={handleToggleOrderBy}>
+                                <span>Nome</span>
+                                {orderBy === "asc" ? (
+                                    <ArrowUp size={16} color="#5061fc" />
+                                ) : (
+                                    <ArrowDown size={16} color="#5061fc" />
+                                )}
+                            </button>
+                        </ListHeader>
+                    )}
+
+                    {filteredContacts.map((contact) => (
+                        <Card key={contact.id}>
+                            <div className="info">
+                                <div className="contact-name">
+                                    <strong>{contact.name}</strong>
+                                    {contact.category_name && (
+                                        <small>{contact.category_name}</small>
                                     )}
+                                </div>
+                                <span>{contact.email}</span>
+                                <span>{contact.phone}</span>
+                            </div>
+
+                            <div className="actions">
+                                <Link to={`/edit/${contact.id}`}>
+                                    <NotePencil size={24} color="#5061fc" />
+                                </Link>
+                                <button type="button">
+                                    <TrashSimple size={24} color="red" />
                                 </button>
-                            </ListHeader>
-                        )}
-
-                        {filteredContacts.map((contact) => (
-                            <Card key={contact.id}>
-                                <div className="info">
-                                    <div className="contact-name">
-                                        <strong>{contact.name}</strong>
-                                        {contact.category_name && (
-                                            <small>
-                                                {contact.category_name}
-                                            </small>
-                                        )}
-                                    </div>
-                                    <span>{contact.email}</span>
-                                    <span>{contact.phone}</span>
-                                </div>
-
-                                <div className="actions">
-                                    <Link to={`/edit/${contact.id}`}>
-                                        <NotePencil size={24} color="#5061fc" />
-                                    </Link>
-                                    <button type="button">
-                                        <TrashSimple size={24} color="red" />
-                                    </button>
-                                </div>
-                            </Card>
-                        ))}
-                    </>
-                )
-            }
+                            </div>
+                        </Card>
+                    ))}
+                </>
+            )}
         </Container>
     );
 }
