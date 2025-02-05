@@ -1,5 +1,5 @@
 import delay from "../../utils/delay";
-import APIError from "../../Errors/APIError";
+import APIError from "../../errors/APIError";
 
 class HttpClient {
     constructor(baseUrl) {

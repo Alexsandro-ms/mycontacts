@@ -15,7 +15,7 @@ import {
     InputSearchContainer,
 } from "./styles";
 import ContactsService from "../../services/ContactsService";
-import APIError from "../../Errors/APIError";
+import APIError from "../../errors/APIError";
 
 export default function Home() {
     const [contacts, setContacts] = useState([]);
