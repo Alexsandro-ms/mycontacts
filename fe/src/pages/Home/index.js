@@ -13,15 +13,17 @@ import {
     Header,
     ListHeader,
     InputSearchContainer,
+    ErrorContainer,
 } from "./styles";
 import ContactsService from "../../services/ContactsService";
-import APIError from "../../errors/APIError";
+import { Button } from "../../components/Button";
 
 export default function Home() {
     const [contacts, setContacts] = useState([]);
     const [orderBy, setOrderBy] = useState("asc");
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
 
     const filteredContacts = useMemo(
         () =>
@@ -38,7 +40,7 @@ export default function Home() {
                 const contactsList = await ContactsService.listContact(orderBy);
                 setContacts(contactsList);
             } catch (error) {
-                console.log(error);
+                setHasError(true);
             } finally {
                 setIsLoading(false);
             }
@@ -65,13 +67,27 @@ export default function Home() {
                     onChange={handleChangeSearchTerm}
                 />
             </InputSearchContainer>
-            <Header>
-                <strong>
-                    {filteredContacts.length}
-                    {filteredContacts.length === 1 ? " contato" : " contatos"}
-                </strong>
+            <Header hasError={hasError}>
+                {!hasError && (
+                    <strong>
+                        {filteredContacts.length}
+                        {filteredContacts.length === 1
+                            ? " contato"
+                            : " contatos"}
+                    </strong>
+                )}
                 <Link to="/new">Novo Contato</Link>
             </Header>
+
+            {hasError && (
+                <ErrorContainer>
+                    <h1>
+                        Ocorreu um erro, ao tentar carregar seus contatos :(
+                    </h1>
+                    <Button type={"button"}>Tentar Novamente</Button>
+                </ErrorContainer>
+            )}
+
             {filteredContacts.length > 0 && (
                 <ListHeader>
                     <button type="button" onClick={handleToggleOrderBy}>
