@@ -33,18 +33,20 @@ export default function Home() {
         [contacts, searchTerm]
     );
 
-    useEffect(() => {
-        async function loadContacts() {
-            try {
-                setIsLoading(true);
-                const contactsList = await ContactsService.listContact(orderBy);
-                setContacts(contactsList);
-            } catch (error) {
-                setHasError(true);
-            } finally {
-                setIsLoading(false);
-            }
+    async function loadContacts() {
+        try {
+            setIsLoading(true);
+            const contactsList = await ContactsService.listContact(orderBy);
+            setHasError(false);
+            setContacts(contactsList);
+        } catch (error) {
+            setHasError(true);
+        } finally {
+            setIsLoading(false);
         }
+    }
+
+    useEffect(() => {
         loadContacts();
     }, [orderBy]);
 
@@ -54,6 +56,10 @@ export default function Home() {
 
     function handleChangeSearchTerm(event) {
         setSearchTerm(event.target.value);
+    }
+
+    function handleTryAgain() {
+        loadContacts();
     }
 
     return (
@@ -84,46 +90,59 @@ export default function Home() {
                     <h1>
                         Ocorreu um erro, ao tentar carregar seus contatos :(
                     </h1>
-                    <Button type={"button"}>Tentar Novamente</Button>
+                    <Button type="button" onClick={handleTryAgain}>
+                        Tentar Novamente
+                    </Button>
                 </ErrorContainer>
             )}
 
-            {filteredContacts.length > 0 && (
-                <ListHeader>
-                    <button type="button" onClick={handleToggleOrderBy}>
-                        <span>Nome</span>
-                        {orderBy === "asc" ? (
-                            <ArrowUp size={16} color="#5061fc" />
-                        ) : (
-                            <ArrowDown size={16} color="#5061fc" />
+            {
+                !hasError(
+                    <>
+                        {filteredContacts.length > 0 && (
+                            <ListHeader>
+                                <button
+                                    type="button"
+                                    onClick={handleToggleOrderBy}
+                                >
+                                    <span>Nome</span>
+                                    {orderBy === "asc" ? (
+                                        <ArrowUp size={16} color="#5061fc" />
+                                    ) : (
+                                        <ArrowDown size={16} color="#5061fc" />
+                                    )}
+                                </button>
+                            </ListHeader>
                         )}
-                    </button>
-                </ListHeader>
-            )}
 
-            {filteredContacts.map((contact) => (
-                <Card key={contact.id}>
-                    <div className="info">
-                        <div className="contact-name">
-                            <strong>{contact.name}</strong>
-                            {contact.category_name && (
-                                <small>{contact.category_name}</small>
-                            )}
-                        </div>
-                        <span>{contact.email}</span>
-                        <span>{contact.phone}</span>
-                    </div>
+                        {filteredContacts.map((contact) => (
+                            <Card key={contact.id}>
+                                <div className="info">
+                                    <div className="contact-name">
+                                        <strong>{contact.name}</strong>
+                                        {contact.category_name && (
+                                            <small>
+                                                {contact.category_name}
+                                            </small>
+                                        )}
+                                    </div>
+                                    <span>{contact.email}</span>
+                                    <span>{contact.phone}</span>
+                                </div>
 
-                    <div className="actions">
-                        <Link to={`/edit/${contact.id}`}>
-                            <NotePencil size={24} color="#5061fc" />
-                        </Link>
-                        <button type="button">
-                            <TrashSimple size={24} color="red" />
-                        </button>
-                    </div>
-                </Card>
-            ))}
+                                <div className="actions">
+                                    <Link to={`/edit/${contact.id}`}>
+                                        <NotePencil size={24} color="#5061fc" />
+                                    </Link>
+                                    <button type="button">
+                                        <TrashSimple size={24} color="red" />
+                                    </button>
+                                </div>
+                            </Card>
+                        ))}
+                    </>
+                )
+            }
         </Container>
     );
 }
