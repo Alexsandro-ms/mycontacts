@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import {
     ArrowDown,
     ArrowUp,
+    DropboxLogo,
     NotePencil,
     TrashSimple,
 } from "@phosphor-icons/react";
@@ -14,6 +16,7 @@ import {
     ListHeader,
     InputSearchContainer,
     ErrorContainer,
+    EmptyListContainer,
 } from "./styles";
 import ContactsService from "../../services/ContactsService";
 import { Button } from "../../components/Button";
@@ -65,16 +68,27 @@ export default function Home() {
     return (
         <Container>
             <Loader isLoading={isLoading} />
-            <InputSearchContainer>
-                <input
-                    value={searchTerm}
-                    type="text"
-                    placeholder="Pesquise pelo nome..."
-                    onChange={handleChangeSearchTerm}
-                />
-            </InputSearchContainer>
-            <Header hasError={hasError}>
-                {!hasError && (
+            {contacts.length > 0 && (
+                <InputSearchContainer>
+                    <input
+                        value={searchTerm}
+                        type="text"
+                        placeholder="Pesquise pelo nome..."
+                        onChange={handleChangeSearchTerm}
+                    />
+                </InputSearchContainer>
+            )}
+
+            <Header
+                justifyContent={
+                    hasError
+                        ? "flex-end"
+                        : contacts.length > 0
+                        ? "space-between"
+                        : "center"
+                }
+            >
+                {!!(!hasError && contacts.length > 0) && (
                     <strong>
                         {filteredContacts.length}
                         {filteredContacts.length === 1
@@ -98,6 +112,16 @@ export default function Home() {
 
             {!hasError && (
                 <>
+                    {contacts.length < 1 && !isLoading && (
+                        <EmptyListContainer>
+                            <DropboxLogo size={128} color="#5061fc" />
+                            <p>
+                                Você ainda não tem nenhum contato cadastrado!
+                                Clique no botão <strong>"Novo Contato"</strong>à
+                                cima para cadastrar o seu primeiro!
+                            </p>
+                        </EmptyListContainer>
+                    )}
                     {filteredContacts.length > 0 && (
                         <ListHeader>
                             <button type="button" onClick={handleToggleOrderBy}>
