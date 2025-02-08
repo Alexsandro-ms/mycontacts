@@ -6,6 +6,7 @@ import {
     ArrowDown,
     ArrowUp,
     DropboxLogo,
+    Empty,
     NotePencil,
     TrashSimple,
 } from "@phosphor-icons/react";
@@ -17,6 +18,7 @@ import {
     InputSearchContainer,
     ErrorContainer,
     EmptyListContainer,
+    SearchNotFoundContainer,
 } from "./styles";
 import ContactsService from "../../services/ContactsService";
 import { Button } from "../../components/Button";
@@ -121,6 +123,22 @@ export default function Home() {
                                 cima para cadastrar o seu primeiro!
                             </p>
                         </EmptyListContainer>
+                    )}
+                    {contacts.length > 0 && filteredContacts.length < 1 && (
+                        <SearchNotFoundContainer>
+                            <div>
+                                <Empty
+                                    size={72}
+                                    weight="fill"
+                                    color="#5061fc"
+                                />
+                                <p>Nenhum resultado foi encontrado</p>
+                            </div>
+                            <span>
+                                Não conseguimos encontrar o resultado para{" "}
+                                <strong>"{searchTerm}"</strong>
+                            </span>
+                        </SearchNotFoundContainer>
                     )}
                     {filteredContacts.length > 0 && (
                         <ListHeader>

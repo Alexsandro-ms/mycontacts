@@ -141,3 +141,27 @@ export const EmptyListContainer = styled.div`
         }
     }
 `;
+
+export const SearchNotFoundContainer = styled.div`
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.gray[200]};
+
+    div {
+        display: flex;
+        align-items: center;
+        p {
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 16px;
+        }
+    }
+
+    span {
+        margin-top: 16px;
+        text-align: center;
+        word-break: break-word;
+    }
+`;
