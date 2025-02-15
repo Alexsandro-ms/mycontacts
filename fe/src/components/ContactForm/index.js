@@ -12,7 +12,7 @@ import { Input } from "../Input";
 import { Select } from "../Select";
 import { Button } from "../Button";
 
-export default function ContactForm({ buttonLabel }) {
+export default function ContactForm({ buttonLabel, onSubmit }) {
     const [isName, setIsName] = useState("");
     const [isEmail, setIsEmail] = useState("");
     const [isPhone, setIsPhone] = useState("");
@@ -57,7 +57,7 @@ export default function ContactForm({ buttonLabel }) {
     }
     function handleSubmit(e) {
         e.preventDefault();
-        console.log({
+        onSubmit({
             name: isName,
             email: isEmail,
             phone: isPhone.replace(/\D/g, ""),
@@ -120,4 +120,5 @@ export default function ContactForm({ buttonLabel }) {
 
 ContactForm.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
 };
