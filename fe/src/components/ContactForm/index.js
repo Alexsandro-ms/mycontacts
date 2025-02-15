@@ -18,6 +18,7 @@ export default function ContactForm({ buttonLabel }) {
     const [isPhone, setIsPhone] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [categories, setCategories] = useState([]);
+    const [isLoadingCategory, setIsLoadingCategory] = useState(true);
 
     const { getErrorMessageByFieldName, removeError, setError, errors } =
         useErrors();
@@ -25,9 +26,14 @@ export default function ContactForm({ buttonLabel }) {
 
     useEffect(() => {
         async function loadCategories() {
-            const categoriesList = await CategoriesService.listCategories();
+            try {
+                const categoriesList = await CategoriesService.listCategories();
 
-            setCategories(categoriesList);
+                setCategories(categoriesList);
+            } catch {
+            } finally {
+                setIsLoadingCategory(false);
+            }
         }
 
         loadCategories();
@@ -89,10 +95,11 @@ export default function ContactForm({ buttonLabel }) {
                     onChange={handlePhoneChange}
                 />
             </FormGroup>
-            <FormGroup>
+            <FormGroup isLoading={isLoadingCategory}>
                 <Select
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
+                    disabled={isLoadingCategory}
                 >
                     <option value={""}>Categoria</option>
                     {categories.map((category) => (

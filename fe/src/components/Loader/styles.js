@@ -22,10 +22,12 @@ export const Overlay = styled.div`
 `;
 
 export const Spinner = styled.div`
-    width: 50px;
-    height: 50px;
-    border: 5px solid ${({ theme }) => theme.colors.gray[200]};
-    border-top: 5px solid ${({ theme }) => theme.colors.primary.main};
+    width: ${({ $small }) => ($small ? "1em" : "50px")};
+    height: ${({ $small }) => ($small ? "1em" : "50px")};
+    border: ${({ $small }) => ($small ? "3px" : "5px")} solid
+        ${({ theme }) => theme.colors.gray[200]};
+    border-top: ${({ $small }) => ($small ? "3px" : "5px")} solid
+        ${({ theme }) => theme.colors.primary.main};
     border-radius: 50%;
     animation: ${spin} 1s linear infinite;
 `;
