@@ -5,34 +5,44 @@ class HttpClient {
     constructor(baseUrl) {
         this.baseUrl = baseUrl; // definindo a URL base da API
     }
-    async get(path) {
-        const response = await fetch(`${this.baseUrl}${path}`); // chamando a API
+    get(path, options) {
+        return this.makeRequest(path, {
+            method: "GET",
+            headers: options?.headers,
+        });
+    }
+    post(path, options) {
+        return this.makeRequest(path, {
+            method: "POST",
+            body: options?.body,
+            headers: options?.headers,
+        });
+    }
+
+    async makeRequest(path, options) {
         await delay(500);
 
-        let body;
-        const contentType = response.headers.get("content-type");
+        const headers = new Headers();
 
-        if (contentType.includes("application/json")) {
-            body = await response.json();
+        if (options.body) {
+            // Percorre as chaves do objeto "headers" presente em "options"
+            // e adiciona cada cabeçalho ao objeto "headers" usado na requisição.
+            Object.keys(options.headers).forEach((name) => {
+                headers.append(name, options.headers[name]);
+            });
+        } // Adicionando os headers quando há um corpo na requisição
+
+        if (options.headers) {
+            Object.entries(options.headers).forEach(([name, value]) => {
+                headers.append(name, value);
+            });
         }
-
-        if (response.ok) {
-            return body;
-        }
-
-        throw new APIError(response, body);
-    }
-    async post(path, body) {
-        const headers = new Headers({
-            "Content-Type": "application/json",
-        });
 
         const response = await fetch(`${this.baseUrl}${path}`, {
-            method: "POST",
-            body: JSON.stringify(body),
+            method: options.method,
+            body: JSON.stringify(options.body),
             headers,
-        }); // chamando a API
-        await delay(500);
+        });
 
         let responseBody;
         const contentType = response.headers.get("content-type");
