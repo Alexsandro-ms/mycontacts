@@ -7,8 +7,10 @@ class ContactsService {
     async listContact(orderBy = "asc") {
         return this.httpClient.get(`/contacts?orderBy=${orderBy}`); // chamando o método get do HttpClient
     }
-    async createContact(body) {
-        return this.httpClient.post("/contacts", body); // chamando o método post do HttpClient
+    async createContact(contact) {
+        return this.httpClient.post("/contacts", {
+            body: contact,
+        }); // chamando o método post do HttpClient
     }
 }
 
