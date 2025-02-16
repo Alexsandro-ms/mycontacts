@@ -27,13 +27,6 @@ class ContactController {
     async store(request, response) {
         // criar registro
         const { name, email, phone, category_id } = request.body;
-        const contactExists = await ContactRepository.findByEmail(email);
-
-        if (contactExists) {
-            return response
-                .status(400)
-                .json({ error: "This e-mail is already in use" });
-        }
 
         if (!name) {
             return response.status(400).json({ error: "Name is required" });
@@ -43,9 +36,19 @@ class ContactController {
             return response.status(400).json({ error: "Invalid category" });
         }
 
+        if (email) {
+            const contactExists = await ContactRepository.findByEmail(email);
+
+            if (contactExists) {
+                return response
+                    .status(400)
+                    .json({ error: "This e-mail is already in use" });
+            }
+        }
+
         const contact = await ContactRepository.create({
             name,
-            email,
+            email: email || null,
             phone,
             category_id: category_id || null,
         });
@@ -75,17 +78,19 @@ class ContactController {
             return response.status(404).json({ error: "User not found" });
         }
 
-        const contactByEmail = await ContactRepository.findByEmail(email);
+        if (email) {
+            const contactByEmail = await ContactRepository.findByEmail(email);
 
-        if (contactByEmail && contactByEmail.id !== id) {
-            return response
-                .status(400)
-                .json({ error: "This e-mail is already in use" });
+            if (contactByEmail && contactByEmail.id !== id) {
+                return response
+                    .status(400)
+                    .json({ error: "This e-mail is already in use" });
+            }
         }
 
         const contact = await ContactRepository.update(id, {
             name,
-            email,
+            email: email || null,
             phone,
             category_id: category_id || null,
         });
