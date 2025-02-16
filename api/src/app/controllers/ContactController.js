@@ -101,6 +101,10 @@ class ContactController {
         // deletar registro
         const { id } = request.params;
 
+        if (!isValidUUID(id)) {
+            return response.status(400).json({ error: "Invalid contact" });
+        }
+
         await ContactRepository.delete(id);
         response.sendStatus(204);
     }
