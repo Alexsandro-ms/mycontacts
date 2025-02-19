@@ -64,7 +64,7 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
             name: isName,
             email: isEmail,
             phone: isPhone.replace(/\D/g, ""),
-            category: categoryId,
+            categoryId,
         });
         setIsSubmitting(false);
     }
