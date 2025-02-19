@@ -2,6 +2,7 @@ import React from "react";
 import PageHeader from "../../components/PageHeader";
 import ContactForm from "../../components/ContactForm";
 import ContactsService from "../../services/ContactsService";
+import toast from "../../utils/toast";
 
 export default function NewContactPage() {
     async function handleSubmit(formData) {
@@ -12,11 +13,19 @@ export default function NewContactPage() {
                 phone: formData.phone,
                 category_id: formData.categoryId,
             };
-            const response = await ContactsService.createContact(contact);
+            const response = await ContactsService.createContact(contact).catch(
+                (e) => console.log("Erro:", e)
+            );
 
-            console.log(response);
+            toast({
+                type: "success",
+                text: "Contato cadastrado com sucesso!",
+            });
         } catch {
-            alert("Erro ao cadastrar contato");
+            toast({
+                type: "danger",
+                text: "Erro ao cadastrar contato!",
+            });
         }
     }
 
