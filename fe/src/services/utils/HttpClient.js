@@ -22,15 +22,15 @@ class HttpClient {
     async makeRequest(path, options) {
         await delay(500);
 
-        const headers = new Headers();
+        const headers = new Headers({
+            "Content-Type": "application/json",
+        });
 
-        if (options.body) {
-            // Percorre as chaves do objeto "headers" presente em "options"
-            // e adiciona cada cabeçalho ao objeto "headers" usado na requisição.
-            Object.keys(options.headers).forEach((name) => {
-                headers.append(name, options.headers[name]);
+        if (options.headers && typeof options.headers === "object") {
+            Object.entries(options.headers).forEach(([name, value]) => {
+                headers.append(name, value);
             });
-        } // Adicionando os headers quando há um corpo na requisição
+        }
 
         if (options.headers) {
             Object.entries(options.headers).forEach(([name, value]) => {
