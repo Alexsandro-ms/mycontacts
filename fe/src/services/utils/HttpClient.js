@@ -22,14 +22,10 @@ class HttpClient {
     async makeRequest(path, options) {
         await delay(500);
 
-        const headers = new Headers({
-            "Content-Type": "application/json",
-        });
+        const headers = new Headers();
 
-        if (options.headers && typeof options.headers === "object") {
-            Object.entries(options.headers).forEach(([name, value]) => {
-                headers.append(name, value);
-            });
+        if (options.body) {
+            headers.append("Content-Type", "application/json");
         }
 
         if (options.headers) {
