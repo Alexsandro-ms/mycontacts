@@ -17,19 +17,17 @@ export default class EventManager {
             listener(payload);
         });
     }
+
+    removeListener(event, listenerToRemove) {
+        const listeners = this.listeners[event];
+        if (!listeners) return;
+
+        const filteredListeners = listeners.filter(
+            (listener) => listener !== listenerToRemove
+        );
+
+        this.listeners[event] = filteredListeners;
+    }
 }
 
 const toastEventManager = new EventManager();
-
-toastEventManager.on("addToast", (payload) => {
-    console.log("AddToast1", payload);
-});
-toastEventManager.on("addToast", (payload) => {
-    console.log("AddToast2", payload);
-});
-
-toastEventManager.emit("addToast", {
-    type: "success",
-    message: "Hello, World!",
-});
-console.log(toastEventManager);
