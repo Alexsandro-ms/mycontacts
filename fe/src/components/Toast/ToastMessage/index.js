@@ -7,7 +7,12 @@ export default function ToastMessage({ message, onRemoveMessage }) {
         onRemoveMessage(message.id);
     }
     return (
-        <Container type={message.type} onClick={handleRemoveToast}>
+        <Container
+            tabIndex={0}
+            role="button"
+            type={message.type}
+            onClick={handleRemoveToast}
+        >
             {message.type === "danger" && <XCircle size={20} weight="bold" />}
             {message.type === "success" && (
                 <CheckCircle size={20} weight="bold" />
