@@ -13,9 +13,7 @@ export default function NewContactPage() {
                 phone: formData.phone,
                 category_id: formData.categoryId,
             };
-            const response = await ContactsService.createContact(contact).catch(
-                (e) => console.log("Erro:", e)
-            );
+            const response = await ContactsService.createContact(contact);
 
             toast({
                 type: "success",
