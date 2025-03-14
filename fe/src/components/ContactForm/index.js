@@ -66,7 +66,12 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
             phone: isPhone.replace(/\D/g, ""),
             categoryId,
         });
+
         setIsSubmitting(false);
+        setIsName("");
+        setIsEmail("");
+        setIsPhone("");
+        setCategoryId("");
     }
     function handlePhoneChange(e) {
         setIsPhone(formatPhone(e.target.value));
