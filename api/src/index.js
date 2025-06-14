@@ -1,4 +1,5 @@
 const express = require("express");
+const { setupDatabase } = require("./database/setupDatabase");
 require("express-async-errors");
 
 const app = express();
@@ -13,6 +14,13 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 3001;
 
-app.listen(3001, () =>
-    console.log(`🔥 Server started at http://localhost:${port}`)
-);
+setupDatabase()
+    .then(() => {
+        app.listen(3001, async () =>
+            console.log(`🔥 Server started at http://localhost:${port}`)
+        );
+    })
+    .catch((error) => {
+        console.error("❌ Error setting up the database:", error);
+        process.exit(1); // Exit the process with a failure code
+    });

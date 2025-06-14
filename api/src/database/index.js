@@ -1,6 +1,6 @@
-const { Client } = require("pg");
+const { Pool } = require("pg");
 
-const client = new Client({
+const pool = new Pool({
     host: "localhost",
     port: 5432,
     user: "root",
@@ -8,9 +8,6 @@ const client = new Client({
     database: "mycontacts",
 });
 
-client.connect();
-
-exports.query = async (query, values) => {
-    const { rows } = await client.query(query, values);
-    return rows;
+module.exports = {
+    query: (text, params) => pool.query(text, params).then((res) => res.rows),
 };
